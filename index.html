@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahwatukee Local Business Spotlight</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fcfcfc;
+            color: #333;
+        }
+        header {
+            background-color: #d35400;
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-bottom: 5px solid #2c3e50;
+        }
+        h1 { margin: 0 0 0.5rem 0; font-size: 2.2rem; }
+        p.subtitle { margin: 0; font-size: 1.1rem; color: #fdf6e3; }
+        
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        /* New Search Bar Styling */
+        .search-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        #searchInput {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            border: 2px solid #bdc3c7;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        #searchInput:focus {
+            border-color: #d35400;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid #d35400;
+            display: flex;
+            flex-direction: column;
+        }
+        .card h3 { margin: 0 0 0.5rem 0; color: #2c3e50; font-size: 1.3rem;}
+        .category-tag {
+            align-self: flex-start;
+            font-size: 0.75rem;
+            background: #ecf0f1;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .address { font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem; display: block; }
+        .phone { font-size: 0.85rem; color: #d35400; font-weight: bold; margin-bottom: 1rem; display: block; }
+        
+        .contact-btn {
+            text-align: center;
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            padding: 0.6rem;
+            border-radius: 4px;
+            margin-top: auto; /* Pushes button to bottom */
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .contact-btn:hover { background-color: #219653; }
+        .contact-btn.disabled { background-color: #95a5a6; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Ahwatukee Local Business Spotlight</h1>
+        <p class="subtitle">Discover and support your neighborhood independent services.</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search by name or category (e.g., Pizza, Plumber, Gym)...">
+        </div>
+
+        <!-- The grid is now empty, JavaScript will fill it! -->
+        <div class="grid" id="business-grid"></div>
+
+    </div>
+
+    <!-- Link all three of your new data files -->
+    <script src="data1.js"></script>
+    <script src="data2.js"></script>
+    <script src="data3.js"></script>
+    
+    <script>
+        const grid = document.getElementById('business-grid');
+        const searchInput = document.getElementById('searchInput');
+
+        // Merge all three data files into one master list
+        const allBusinesses = [...data1, ...data2, ...data3];
+
+        function displayBusinesses(businessesToDisplay) {
+            grid.innerHTML = ''; 
+
+            businessesToDisplay.forEach(biz => {
+                let btnHtml = '';
+                if (biz.website && biz.website !== "") {
+                    btnHtml = `<a href="${biz.website}" target="_blank" class="contact-btn">Visit Website</a>`;
+                } else {
+                    btnHtml = `<a class="contact-btn disabled">No Website Available</a>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h3>${biz.title}</h3>
+                    <span class="category-tag">${biz.categoryName}</span>
+                    <span class="address">${biz.address || 'Ahwatukee, AZ'}</span>
+                    <span class="phone">${biz.phone || 'No phone listed'}</span>
+                    ${btnHtml}
+                `;
+                grid.appendChild(card); 
+            });
+        }
+
+        searchInput.addEventListener('keyup', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            const filteredData = allBusinesses.filter(biz => {
+                const matchesTitle = biz.title.toLowerCase().includes(searchTerm);
+                const matchesCategory = biz.categoryName.toLowerCase().includes(searchTerm);
+                return matchesTitle || matchesCategory;
+            });
+
+            displayBusinesses(filteredData);
+        });
+
+        // Initialize the page by displaying everything
+        displayBusinesses(allBusinesses);
+
+    </script>
+</body>
+</html>
