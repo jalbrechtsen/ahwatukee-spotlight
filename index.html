@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ahwatukee Local Business Spotlight</title>
     <style>
-        /* 1. Define our Color Variables (Light Mode Default) */
+        /* 1. Define our Color Variables */
         :root {
             --bg-color: #fcfcfc;
             --text-color: #333333;
@@ -28,7 +28,7 @@
             --bg-color: #121212;
             --text-color: #e0e0e0;
             --header-bg: #1e1e1e;
-            --header-text: #d35400; /* Sunset orange text */
+            --header-text: #d35400; 
             --header-border: #d35400;
             --card-bg: #1e1e1e;
             --card-title: #ffffff;
@@ -41,14 +41,14 @@
             --hover-shadow: rgba(0,0,0,0.5);
         }
 
-        /* 3. Apply the variables to our elements */
+        /* 3. Base Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth fade! */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         header {
             background-color: var(--header-bg);
@@ -62,7 +62,6 @@
         h1 { margin: 0 0 0.5rem 0; font-size: 2.2rem; }
         p.subtitle { margin: 0; font-size: 1.1rem; opacity: 0.9; }
         
-        /* New Toggle Button Styling */
         .theme-toggle {
             position: absolute;
             top: 1rem;
@@ -142,27 +141,38 @@
         .address { font-size: 0.85rem; color: var(--tag-text); margin-bottom: 0.5rem; display: block; }
         .phone { font-size: 0.85rem; color: #d35400; font-weight: bold; margin-bottom: 1rem; display: block; }
         
+        /* New Button Group Styling for Side-by-Side layout */
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto; /* Pushes the buttons to the bottom of the card */
+        }
+
         .contact-btn {
+            flex: 1; /* Makes buttons share the width equally */
             text-align: center;
             background-color: #27ae60;
             color: white;
             text-decoration: none;
             padding: 0.6rem;
             border-radius: 4px;
-            margin-top: auto; 
             font-weight: bold;
+            font-size: 0.9rem;
             transition: background-color 0.2s;
         }
         .contact-btn:hover { background-color: #219653; }
         .contact-btn.disabled { background-color: #95a5a6; cursor: not-allowed; }
+
+        /* Custom color for the directions button */
+        .directions-btn { background-color: #2980b9; }
+        .directions-btn:hover { background-color: #2471a3; }
+
     </style>
 </head>
 <body>
 
     <header>
-        <!-- The new toggle button -->
         <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
-        
         <h1>Ahwatukee Local Business Spotlight</h1>
         <p class="subtitle">Discover and support your neighborhood independent services.</p>
     </header>
@@ -174,7 +184,6 @@
         <div class="grid" id="business-grid"></div>
     </div>
 
-    <!-- Your data files -->
     <script src="data1.js"></script>
     <script src="data2.js"></script>
     <script src="data3.js"></script>
@@ -182,27 +191,22 @@
     <script>
         // --- THEME TOGGLE LOGIC ---
         const themeToggle = document.getElementById('themeToggle');
-        
-        // 1. Check if the user previously saved a theme preference
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
         themeToggle.textContent = currentTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
 
-        // 2. Listen for clicks on the toggle button
         themeToggle.addEventListener('click', () => {
             let theme = document.documentElement.getAttribute('data-theme');
-            
             if (theme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light'); // Save preference
+                localStorage.setItem('theme', 'light');
                 themeToggle.textContent = '🌙 Dark Mode';
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark'); // Save preference
+                localStorage.setItem('theme', 'dark');
                 themeToggle.textContent = '☀️ Light Mode';
             }
         });
-
 
         // --- GRID AND SEARCH LOGIC ---
         const grid = document.getElementById('business-grid');
@@ -212,13 +216,22 @@
         function displayBusinesses(businessesToDisplay) {
             grid.innerHTML = ''; 
             businessesToDisplay.forEach(biz => {
-                let btnHtml = '';
+                
+                // 1. Build the Website Button
+                let websiteBtnHtml = '';
                 if (biz.website && biz.website !== "") {
-                    btnHtml = `<a href="${biz.website}" target="_blank" class="contact-btn">Visit Website</a>`;
+                    websiteBtnHtml = `<a href="${biz.website}" target="_blank" class="contact-btn">Website</a>`;
                 } else {
-                    btnHtml = `<a class="contact-btn disabled">No Website Available</a>`;
+                    websiteBtnHtml = `<a class="contact-btn disabled">No Website</a>`;
                 }
 
+                // 2. Build the Directions Button
+                // We use the address if they have one, otherwise we tell Google to just search the name + Ahwatukee
+                let addressQuery = biz.address ? biz.address : (biz.title + ", Ahwatukee, AZ");
+                let mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressQuery)}`;
+                let directionsBtnHtml = `<a href="${mapsUrl}" target="_blank" class="contact-btn directions-btn">Directions</a>`;
+
+                // 3. Assemble the Card
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
@@ -226,7 +239,11 @@
                     <span class="category-tag">${biz.categoryName}</span>
                     <span class="address">${biz.address || 'Ahwatukee, AZ'}</span>
                     <span class="phone">${biz.phone || 'No phone listed'}</span>
-                    ${btnHtml}
+                    
+                    <div class="button-group">
+                        ${websiteBtnHtml}
+                        ${directionsBtnHtml}
+                    </div>
                 `;
                 grid.appendChild(card); 
             });
