@@ -4,166 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ahwatukee Local Business Spotlight</title>
+    
+    <!-- 1. Import Google Fonts (Poppins) and Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <style>
-        /* 1. Define our Color Variables */
         :root {
-            --bg-color: #fcfcfc;
-            --text-color: #333333;
-            --header-bg: #d35400;
+            --bg-color: #f8f9fa;
+            --text-color: #2b2b2b;
+            --header-gradient: linear-gradient(135deg, #d35400 0%, #e74c3c 100%);
             --header-text: white;
-            --header-border: #2c3e50;
             --card-bg: white;
             --card-title: #2c3e50;
-            --tag-bg: #ecf0f1;
-            --tag-text: #7f8c8d;
+            --tag-bg: #ffe4d6;
+            --tag-text: #d35400;
             --input-bg: white;
             --input-text: #333333;
-            --input-border: #bdc3c7;
-            --shadow: rgba(0,0,0,0.05);
-            --hover-shadow: rgba(0,0,0,0.1);
+            --input-border: #e0e0e0;
+            --shadow: rgba(0,0,0,0.08);
+            --hover-shadow: rgba(211, 84, 0, 0.2);
         }
 
-        /* 2. Define the Dark Mode Colors */
         [data-theme="dark"] {
             --bg-color: #121212;
             --text-color: #e0e0e0;
-            --header-bg: #1e1e1e;
+            --header-gradient: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
             --header-text: #d35400; 
-            --header-border: #d35400;
             --card-bg: #1e1e1e;
             --card-title: #ffffff;
-            --tag-bg: #333333;
-            --tag-text: #aaaaaa;
+            --tag-bg: #2d1303;
+            --tag-text: #e67e22;
             --input-bg: #2a2a2a;
             --input-text: #ffffff;
-            --input-border: #555555;
-            --shadow: rgba(0,0,0,0.3);
-            --hover-shadow: rgba(0,0,0,0.5);
+            --input-border: #444444;
+            --shadow: rgba(0,0,0,0.4);
+            --hover-shadow: rgba(211, 84, 0, 0.4);
         }
 
-        /* 3. Base Styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif; /* Applied new font */
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         header {
-            background-color: var(--header-bg);
+            background: var(--header-gradient);
             color: var(--header-text);
             text-align: center;
-            padding: 2.5rem 1rem;
-            border-bottom: 5px solid var(--header-border);
+            padding: 4rem 1rem;
             position: relative;
-            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        h1 { margin: 0 0 0.5rem 0; font-size: 2.2rem; }
-        p.subtitle { margin: 0; font-size: 1.1rem; opacity: 0.9; }
+        
+        h1 { 
+            margin: 0 0 0.5rem 0; 
+            font-size: 2.8rem; 
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        p.subtitle { 
+            margin: 0; 
+            font-size: 1.2rem; 
+            font-weight: 300;
+            opacity: 0.95; 
+        }
         
         .theme-toggle {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: transparent;
-            border: 2px solid currentColor;
-            color: inherit;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 2px solid transparent;
+            color: var(--header-text);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
         }
         .theme-toggle:hover {
-            background: currentColor;
-            color: var(--header-bg);
+            background: white;
+            color: #d35400;
+            transform: translateY(-2px);
         }
 
         .container {
-            max-width: 1000px;
-            margin: 2rem auto;
+            max-width: 1100px;
+            margin: -2rem auto 3rem auto; /* Pulls content up slightly over the header */
             padding: 0 1rem;
+            position: relative;
+            z-index: 10;
         }
         
         .search-container {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
+        
+        /* New Icon inside search bar */
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+        }
+
         #searchInput {
             width: 100%;
-            max-width: 500px;
-            padding: 0.8rem 1.2rem;
-            font-size: 1rem;
+            box-sizing: border-box;
+            padding: 1.2rem 1.2rem 1.2rem 3.5rem; /* Extra padding on left for icon */
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
             background-color: var(--input-bg);
             color: var(--input-text);
             border: 2px solid var(--input-border);
-            border-radius: 25px;
+            border-radius: 50px;
             outline: none;
-            transition: all 0.3s;
+            box-shadow: 0 8px 15px var(--shadow);
+            transition: all 0.3s ease;
         }
         #searchInput:focus {
             border-color: #d35400;
+            box-shadow: 0 8px 20px var(--hover-shadow);
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px var(--shadow);
-            border-top: 4px solid #d35400;
+            border-radius: 16px; /* Softer corners */
+            padding: 1.8rem;
+            box-shadow: 0 10px 20px var(--shadow);
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--input-border);
         }
         .card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 8px 12px var(--hover-shadow);
+            transform: translateY(-8px); 
+            box-shadow: 0 15px 30px var(--hover-shadow);
         }
-        .card h3 { margin: 0 0 0.5rem 0; color: var(--card-title); font-size: 1.3rem;}
+        .card h3 { 
+            margin: 0 0 0.8rem 0; 
+            color: var(--card-title); 
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
         .category-tag {
             align-self: flex-start;
             font-size: 0.75rem;
+            font-weight: 700;
             background: var(--tag-bg);
-            padding: 0.25rem 0.6rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 1.2rem;
             color: var(--tag-text);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
-        .address { font-size: 0.85rem; color: var(--tag-text); margin-bottom: 0.5rem; display: block; }
-        .phone { font-size: 0.85rem; color: #d35400; font-weight: bold; margin-bottom: 1rem; display: block; }
+        .address, .phone { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 0.9rem; 
+            margin-bottom: 0.8rem; 
+        }
+        .address { color: var(--tag-text); opacity: 0.8;}
+        .phone { color: var(--text-color); font-weight: 600; }
         
-        /* New Button Group Styling for Side-by-Side layout */
         .button-group {
             display: flex;
-            gap: 0.5rem;
-            margin-top: auto; /* Pushes the buttons to the bottom of the card */
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--input-border);
         }
 
         .contact-btn {
-            flex: 1; /* Makes buttons share the width equally */
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             text-align: center;
             background-color: #27ae60;
             color: white;
             text-decoration: none;
-            padding: 0.6rem;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
+            padding: 0.8rem;
+            border-radius: 30px; /* Pill shape buttons */
+            font-weight: 600;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
         }
-        .contact-btn:hover { background-color: #219653; }
-        .contact-btn.disabled { background-color: #95a5a6; cursor: not-allowed; }
+        .contact-btn:hover { background-color: #219653; transform: scale(1.02); }
+        .contact-btn.disabled { background-color: #bdc3c7; cursor: not-allowed; color: #7f8c8d; }
+        .contact-btn.disabled:hover { transform: none; }
 
-        /* Custom color for the directions button */
         .directions-btn { background-color: #2980b9; }
         .directions-btn:hover { background-color: #2471a3; }
 
@@ -173,23 +225,24 @@
 
     <header>
         <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
-        <h1>Ahwatukee Local Business Spotlight</h1>
-        <p class="subtitle">Discover and support your neighborhood independent services.</p>
+        <h1>Ahwatukee Spotlight</h1>
+        <p class="subtitle">Discover and support your neighborhood's independent services.</p>
     </header>
 
     <div class="container">
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search by name or category (e.g., Pizza, Plumber, Gym)...">
+            <span class="material-icons search-icon">search</span>
+            <input type="text" id="searchInput" placeholder="Search by name or category (e.g., Pizza, Plumber)...">
         </div>
         <div class="grid" id="business-grid"></div>
     </div>
 
+    <!-- Data Files -->
     <script src="data1.js"></script>
     <script src="data2.js"></script>
     <script src="data3.js"></script>
     
     <script>
-        // --- THEME TOGGLE LOGIC ---
         const themeToggle = document.getElementById('themeToggle');
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
@@ -208,7 +261,6 @@
             }
         });
 
-        // --- GRID AND SEARCH LOGIC ---
         const grid = document.getElementById('business-grid');
         const searchInput = document.getElementById('searchInput');
         const allBusinesses = [...data1, ...data2, ...data3];
@@ -217,28 +269,32 @@
             grid.innerHTML = ''; 
             businessesToDisplay.forEach(biz => {
                 
-                // 1. Build the Website Button
                 let websiteBtnHtml = '';
                 if (biz.website && biz.website !== "") {
-                    websiteBtnHtml = `<a href="${biz.website}" target="_blank" class="contact-btn">Website</a>`;
+                    websiteBtnHtml = `<a href="${biz.website}" target="_blank" class="contact-btn"><span class="material-icons" style="font-size: 18px;">language</span> Website</a>`;
                 } else {
-                    websiteBtnHtml = `<a class="contact-btn disabled">No Website</a>`;
+                    websiteBtnHtml = `<a class="contact-btn disabled"><span class="material-icons" style="font-size: 18px;">language</span> None</a>`;
                 }
 
-                // 2. Build the Directions Button
-                // We use the address if they have one, otherwise we tell Google to just search the name + Ahwatukee
                 let addressQuery = biz.address ? biz.address : (biz.title + ", Ahwatukee, AZ");
                 let mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressQuery)}`;
-                let directionsBtnHtml = `<a href="${mapsUrl}" target="_blank" class="contact-btn directions-btn">Directions</a>`;
+                let directionsBtnHtml = `<a href="${mapsUrl}" target="_blank" class="contact-btn directions-btn"><span class="material-icons" style="font-size: 18px;">place</span> Directions</a>`;
 
-                // 3. Assemble the Card
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
                     <h3>${biz.title}</h3>
                     <span class="category-tag">${biz.categoryName}</span>
-                    <span class="address">${biz.address || 'Ahwatukee, AZ'}</span>
-                    <span class="phone">${biz.phone || 'No phone listed'}</span>
+                    
+                    <span class="address">
+                        <span class="material-icons" style="font-size: 16px; opacity: 0.6;">location_on</span>
+                        ${biz.address || 'Ahwatukee, AZ'}
+                    </span>
+                    
+                    <span class="phone">
+                        <span class="material-icons" style="font-size: 16px; opacity: 0.6;">phone</span>
+                        ${biz.phone || 'No phone listed'}
+                    </span>
                     
                     <div class="button-group">
                         ${websiteBtnHtml}
