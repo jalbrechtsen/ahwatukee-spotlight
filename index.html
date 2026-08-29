@@ -5,30 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ahwatukee Local Business Spotlight</title>
     <style>
+        /* 1. Define our Color Variables (Light Mode Default) */
+        :root {
+            --bg-color: #fcfcfc;
+            --text-color: #333333;
+            --header-bg: #d35400;
+            --header-text: white;
+            --header-border: #2c3e50;
+            --card-bg: white;
+            --card-title: #2c3e50;
+            --tag-bg: #ecf0f1;
+            --tag-text: #7f8c8d;
+            --input-bg: white;
+            --input-text: #333333;
+            --input-border: #bdc3c7;
+            --shadow: rgba(0,0,0,0.05);
+            --hover-shadow: rgba(0,0,0,0.1);
+        }
+
+        /* 2. Define the Dark Mode Colors */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #1e1e1e;
+            --header-text: #d35400; /* Sunset orange text */
+            --header-border: #d35400;
+            --card-bg: #1e1e1e;
+            --card-title: #ffffff;
+            --tag-bg: #333333;
+            --tag-text: #aaaaaa;
+            --input-bg: #2a2a2a;
+            --input-text: #ffffff;
+            --input-border: #555555;
+            --shadow: rgba(0,0,0,0.3);
+            --hover-shadow: rgba(0,0,0,0.5);
+        }
+
+        /* 3. Apply the variables to our elements */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fcfcfc;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth fade! */
         }
         header {
-            background-color: #d35400;
-            color: white;
+            background-color: var(--header-bg);
+            color: var(--header-text);
             text-align: center;
             padding: 2.5rem 1rem;
-            border-bottom: 5px solid #2c3e50;
+            border-bottom: 5px solid var(--header-border);
+            position: relative;
+            transition: background-color 0.3s ease;
         }
         h1 { margin: 0 0 0.5rem 0; font-size: 2.2rem; }
-        p.subtitle { margin: 0; font-size: 1.1rem; color: #fdf6e3; }
+        p.subtitle { margin: 0; font-size: 1.1rem; opacity: 0.9; }
         
+        /* New Toggle Button Styling */
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: 2px solid currentColor;
+            color: inherit;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover {
+            background: currentColor;
+            color: var(--header-bg);
+        }
+
         .container {
             max-width: 1000px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
         
-        /* New Search Bar Styling */
         .search-container {
             text-align: center;
             margin-bottom: 2rem;
@@ -38,10 +96,12 @@
             max-width: 500px;
             padding: 0.8rem 1.2rem;
             font-size: 1rem;
-            border: 2px solid #bdc3c7;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border: 2px solid var(--input-border);
             border-radius: 25px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
         #searchInput:focus {
             border-color: #d35400;
@@ -54,27 +114,32 @@
         }
 
         .card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 8px;
             padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px var(--shadow);
             border-top: 4px solid #d35400;
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
         }
-        .card h3 { margin: 0 0 0.5rem 0; color: #2c3e50; font-size: 1.3rem;}
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 12px var(--hover-shadow);
+        }
+        .card h3 { margin: 0 0 0.5rem 0; color: var(--card-title); font-size: 1.3rem;}
         .category-tag {
             align-self: flex-start;
             font-size: 0.75rem;
-            background: #ecf0f1;
+            background: var(--tag-bg);
             padding: 0.25rem 0.6rem;
             border-radius: 12px;
             margin-bottom: 1rem;
-            color: #7f8c8d;
+            color: var(--tag-text);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .address { font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem; display: block; }
+        .address { font-size: 0.85rem; color: var(--tag-text); margin-bottom: 0.5rem; display: block; }
         .phone { font-size: 0.85rem; color: #d35400; font-weight: bold; margin-bottom: 1rem; display: block; }
         
         .contact-btn {
@@ -84,7 +149,7 @@
             text-decoration: none;
             padding: 0.6rem;
             border-radius: 4px;
-            margin-top: auto; /* Pushes button to bottom */
+            margin-top: auto; 
             font-weight: bold;
             transition: background-color 0.2s;
         }
@@ -95,36 +160,57 @@
 <body>
 
     <header>
+        <!-- The new toggle button -->
+        <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
+        
         <h1>Ahwatukee Local Business Spotlight</h1>
         <p class="subtitle">Discover and support your neighborhood independent services.</p>
     </header>
 
     <div class="container">
-        
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Search by name or category (e.g., Pizza, Plumber, Gym)...">
         </div>
-
-        <!-- The grid is now empty, JavaScript will fill it! -->
         <div class="grid" id="business-grid"></div>
-
     </div>
 
-    <!-- Link all three of your new data files -->
+    <!-- Your data files -->
     <script src="data1.js"></script>
     <script src="data2.js"></script>
     <script src="data3.js"></script>
     
     <script>
+        // --- THEME TOGGLE LOGIC ---
+        const themeToggle = document.getElementById('themeToggle');
+        
+        // 1. Check if the user previously saved a theme preference
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.textContent = currentTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+        // 2. Listen for clicks on the toggle button
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light'); // Save preference
+                themeToggle.textContent = '🌙 Dark Mode';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark'); // Save preference
+                themeToggle.textContent = '☀️ Light Mode';
+            }
+        });
+
+
+        // --- GRID AND SEARCH LOGIC ---
         const grid = document.getElementById('business-grid');
         const searchInput = document.getElementById('searchInput');
-
-        // Merge all three data files into one master list
         const allBusinesses = [...data1, ...data2, ...data3];
 
         function displayBusinesses(businessesToDisplay) {
             grid.innerHTML = ''; 
-
             businessesToDisplay.forEach(biz => {
                 let btnHtml = '';
                 if (biz.website && biz.website !== "") {
@@ -148,19 +234,15 @@
 
         searchInput.addEventListener('keyup', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            
             const filteredData = allBusinesses.filter(biz => {
                 const matchesTitle = biz.title.toLowerCase().includes(searchTerm);
                 const matchesCategory = biz.categoryName.toLowerCase().includes(searchTerm);
                 return matchesTitle || matchesCategory;
             });
-
             displayBusinesses(filteredData);
         });
 
-        // Initialize the page by displaying everything
         displayBusinesses(allBusinesses);
-
     </script>
 </body>
 </html>
